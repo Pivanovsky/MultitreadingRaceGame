@@ -40,7 +40,7 @@ public class MySecundomer {
 
     @Override
     public String toString() {
-        return String.format("%00d:%00d:%00d:%000d",hour,min,sec,milisec);
+        return String.format("%02d:%02d:%02d:%03d",hour,min,sec,milisec);
     }
 
     public boolean isStopSec() {

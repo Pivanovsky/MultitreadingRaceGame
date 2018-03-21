@@ -50,26 +50,10 @@ public class FrmCar {
 
 
                 startCarPosition();
-                for (int i = 0; i < mySec.length; i++) {
-                    mySec[i].restart();
-                    JLabel lbSec = lblCar1;
-                    switch (i) {
-                        case 0:
-                            lbSec = lblCar1;
-                            break;
-                        case 1:
-                            lbSec = lblCar1;
-                            break;
-                        case 2:
-                            lbSec = lblCar1;
-                            break;
-                    }
 
-                    runSec(mySec[i], lbSec);
-                }
-                runCar(btn1);
-                runCar(btn2);
-                runCar(btn3);
+                runCar(btn1,lblCar1,mySec[0]);
+                runCar(btn2,lblCar2,mySec[1]);
+                runCar(btn3,lblCar3,mySec[2]);
             }
         });
 
@@ -94,9 +78,9 @@ public class FrmCar {
         btn2.setBounds(10, 160, 50, 50);
         btn3.setBounds(10, 260, 50, 50);
 
-        lblCar1.setBounds(10, 330, 50, 20);
-        lblCar2.setBounds(10, 360, 50, 20);
-        lblCar3.setBounds(10, 390, 50, 20);
+        lblCar1.setBounds(10, 330, 100, 20);
+        lblCar2.setBounds(10, 360, 100, 20);
+        lblCar3.setBounds(10, 390, 100, 20);
 
     }
 
@@ -104,18 +88,21 @@ public class FrmCar {
         return (int) (Math.random() * 1000);
     }
 
-    private void runCar(JButton btn) {
+    private void runCar(JButton btn,JLabel lbCar,MySecundomer mySc) {
         Thread car = new Thread() {
             @Override
             public void run() {
                 while ((btn.getX() + 50) <= btn.getParent().getWidth()) {
                     try {
-                        Thread.sleep(getMilSec());
+                        int ml=getMilSec();
+                        Thread.sleep(ml);
+                        mySc.increaseMiliSec(ml);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     int x = btn.getX() + 10;
                     btn.setBounds(x, btn.getY(), btn.getWidth(), btn.getHeight());
+                    lbCar.setText(mySc.toString());
                 }
                 if (!winner) {
                     lbl.setText(btn.getText() + " is Winner!!!");
@@ -127,23 +114,5 @@ public class FrmCar {
 
     }
 
-    private void runSec(MySecundomer msec, JLabel lbl_sec) {
-        Thread secund = new Thread() {
-            @Override
-            public void run() {
-                while (msec.isStopSec()) {
-                    try {
-                        Thread.sleep(5);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    msec.increaseMiliSec(5);
-                    lbl_sec.setText(msec.toString());
-                }
 
-            }
-        };
-        secund.start();
-
-    }
 }
