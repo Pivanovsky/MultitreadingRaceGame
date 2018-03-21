@@ -19,6 +19,11 @@ public class FrmCar {
     JLabel lblCar1 = new JLabel("Sec1");
     JLabel lblCar2 = new JLabel("Sec2");
     JLabel lblCar3 = new JLabel("Sec3");
+
+    JRadioButton radio1=new JRadioButton("Sport car");
+    JRadioButton radio2=new JRadioButton("Standart car");
+    JRadioButton radio3=new JRadioButton("Track");
+    ButtonGroup groupTypeofCar=new ButtonGroup();
     MySecundomer[] mySec = new MySecundomer[3];
 
     public FrmCar() {
@@ -26,6 +31,15 @@ public class FrmCar {
     }
 
     private void initialize() {
+
+        groupTypeofCar.add(radio1);
+        groupTypeofCar.add(radio2);
+        groupTypeofCar.add(radio3);
+        radio1.setSelected(true);
+        radio1.setBounds(70,10,100,20);
+        radio2.setBounds(170,10,100,20);
+        radio3.setBounds(270,10,100,20);
+
 
         for (int i = 0; i < mySec.length; i++) {
             mySec[i] = new MySecundomer();
@@ -35,7 +49,7 @@ public class FrmCar {
         pnlMain.setLayout(null);
 
         btnStart.setBounds(0, 0, 50, 50);
-        lbl.setBounds(100, 0, 150, 50);
+        lbl.setBounds(100, 30, 150, 50);
 
         btn1.setIcon(new ImageIcon("src\\com\\data\\i1.jpg"));
         btn2.setIcon(new ImageIcon("src\\com\\data\\i2.jpg"));
@@ -51,15 +65,18 @@ public class FrmCar {
 
                 startCarPosition();
 
-                runCar(btn1,lblCar1,mySec[0]);
-                runCar(btn2,lblCar2,mySec[1]);
-                runCar(btn3,lblCar3,mySec[2]);
+                runCar(btn1, lblCar1, mySec[0]);
+                runCar(btn2, lblCar2, mySec[1]);
+                runCar(btn3, lblCar3, mySec[2]);
             }
         });
 
 
         pnlMain.add(btnStart);
         pnlMain.add(lbl);
+        pnlMain.add(radio1);
+        pnlMain.add(radio2);
+        pnlMain.add(radio3);
         pnlMain.add(btn1);
         pnlMain.add(btn2);
         pnlMain.add(btn3);
@@ -85,16 +102,24 @@ public class FrmCar {
     }
 
     private int getMilSec() {
-        return (int) (Math.random() * 1000);
+        int speed=1000;
+        if(radio1.isSelected())
+            speed=100;
+        if(radio2.isSelected())
+            speed=500;
+        if(radio3.isSelected())
+            speed=1000;
+
+        return (int) (Math.random() * speed);
     }
 
-    private void runCar(JButton btn,JLabel lbCar,MySecundomer mySc) {
+    private void runCar(JButton btn, JLabel lbCar, MySecundomer mySc) {
         Thread car = new Thread() {
             @Override
             public void run() {
                 while ((btn.getX() + 50) <= btn.getParent().getWidth()) {
                     try {
-                        int ml=getMilSec();
+                        int ml = getMilSec();
                         Thread.sleep(ml);
                         mySc.increaseMiliSec(ml);
                     } catch (InterruptedException e) {
