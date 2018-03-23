@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Graphics;
+import java.awt.geom.Line2D;
 
 public class FrmCar {
     JFrame frm = new JFrame();
@@ -20,15 +22,19 @@ public class FrmCar {
     JLabel lblCar2 = new JLabel("Sec2");
     JLabel lblCar3 = new JLabel("Sec3");
 
-    JRadioButton radio1=new JRadioButton("Sport car");
-    JRadioButton radio2=new JRadioButton("Standart car");
-    JRadioButton radio3=new JRadioButton("Track");
-    ButtonGroup groupTypeofCar=new ButtonGroup();
+    JRadioButton radio1 = new JRadioButton("Sport car");
+    JRadioButton radio2 = new JRadioButton("Standart car");
+    JRadioButton radio3 = new JRadioButton("Track");
+    ButtonGroup groupTypeofCar = new ButtonGroup();
     MySecundomer[] mySec = new MySecundomer[3];
 
     public FrmCar() {
         initialize();
     }
+
+
+
+
 
     private void initialize() {
 
@@ -36,9 +42,9 @@ public class FrmCar {
         groupTypeofCar.add(radio2);
         groupTypeofCar.add(radio3);
         radio1.setSelected(true);
-        radio1.setBounds(70,10,100,20);
-        radio2.setBounds(170,10,100,20);
-        radio3.setBounds(270,10,100,20);
+        radio1.setBounds(70, 10, 100, 20);
+        radio2.setBounds(170, 10, 100, 20);
+        radio3.setBounds(270, 10, 100, 20);
 
 
         for (int i = 0; i < mySec.length; i++) {
@@ -65,9 +71,13 @@ public class FrmCar {
 
                 startCarPosition();
 
-                runCar(btn1, lblCar1, mySec[0]);
-                runCar(btn2, lblCar2, mySec[1]);
-                runCar(btn3, lblCar3, mySec[2]);
+                runSec(btn1, lblCar1, mySec[0]);
+                runSec(btn2, lblCar2, mySec[1]);
+                runSec(btn3, lblCar3, mySec[2]);
+
+                runCar(btn1);
+                runCar(btn2);
+                runCar(btn3);
             }
         });
 
@@ -83,6 +93,8 @@ public class FrmCar {
         pnlMain.add(lblCar1);
         pnlMain.add(lblCar2);
         pnlMain.add(lblCar3);
+
+
 
         frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frm.setBounds(100, 100, 1100, 700);
@@ -102,18 +114,18 @@ public class FrmCar {
     }
 
     private int getMilSec() {
-        int speed=1000;
-        if(radio1.isSelected())
-            speed=100;
-        if(radio2.isSelected())
-            speed=500;
-        if(radio3.isSelected())
-            speed=1000;
+        int speed = 1000;
+        if (radio1.isSelected())
+            speed = 100;
+        if (radio2.isSelected())
+            speed = 500;
+        if (radio3.isSelected())
+            speed = 1000;
 
         return (int) (Math.random() * speed);
     }
 
-    private void runCar(JButton btn, JLabel lbCar, MySecundomer mySc) {
+    private void runCar(JButton btn) {
         Thread car = new Thread() {
             @Override
             public void run() {
@@ -121,13 +133,13 @@ public class FrmCar {
                     try {
                         int ml = getMilSec();
                         Thread.sleep(ml);
-                        mySc.increaseMiliSec(ml);
+
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     int x = btn.getX() + 10;
                     btn.setBounds(x, btn.getY(), btn.getWidth(), btn.getHeight());
-                    lbCar.setText(mySc.toString());
+
                 }
                 if (!winner) {
                     lbl.setText(btn.getText() + " is Winner!!!");
@@ -139,5 +151,25 @@ public class FrmCar {
 
     }
 
+    private void runSec(JButton btn, JLabel lbCar, MySecundomer mySc) {
+        mySc.restart();
+        Thread SecThread = new Thread() {
+            @Override
+            public void run() {
+                while ((btn.getX() + 50) <= btn.getParent().getWidth()) {
+                    try {
+                        int ml = 5;
+                        Thread.sleep(ml);
+                        mySc.increaseMiliSec(ml);
+                    } catch (InterruptedException e) {
+                        System.out.println("------------------");
+                        e.printStackTrace();
+                    }
+                    lbCar.setText(mySc.toString());
+                }
+            }
+        };
+        SecThread.start();
+    }
 
 }
